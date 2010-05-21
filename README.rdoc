@@ -1,6 +1,32 @@
 = rack-secure_only
 
-Description goes here.
+SecureOnly will redirect to https if the request is on http.
+
+When passed :secure => false it will do the opposite and redirect https to http.
+
+The check if the current request is on https includes checking the HTTP_X_FORWARDED_PROTO header.
+
+This means the redirect will also work on heroku.com
+
+== Usage
+
+	require 'rack/secure_only'
+
+	app = Rack::Builder.new do      
+	  map '/secure' do
+	    use Rack::SecureOnly
+	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+	  end
+  
+	  map '/notsecure' do
+	    use Rack::SecureOnly, :secure => false
+	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["NON SECURE APP"]] }
+	  end
+	end
+	
+	run app
+	
+This will redirect all requests to /secure to https and all requests to /notsecure to http.
 
 == Note on Patches/Pull Requests
  
