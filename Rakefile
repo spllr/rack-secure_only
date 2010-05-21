@@ -11,7 +11,8 @@ begin
     gem.homepage = "http://github.com/spllr/rack-secure_only"
     gem.authors = ["Klaas Speller"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_development_dependency "rack-test", ">= 0.5.3"
+    gem.add_dependency "rack", ">= 1.1.0"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -23,14 +24,6 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
-
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-end
-
-task :spec => :check_dependencies
 
 task :default => :spec
 
