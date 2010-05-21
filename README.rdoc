@@ -8,6 +8,10 @@ The check if the current request is on https includes checking the HTTP_X_FORWAR
 
 This means the redirect will also work on heroku.com
 
+== Installation
+
+	sudo gem install rack-secure_only
+
 == Usage
 
 	require 'rack/secure_only'
