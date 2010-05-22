@@ -11,6 +11,11 @@ module Rack
   #
   # This means the redirect will also work on heroku.com
   #
+  # @param [Hash] opts options for redirect rules
+  # @option opts [Boolean] :secure If set to false will redirect https to http, defaults to true
+  # @option opts [Fixnum] :status_code Status code to redirect with, defaults to 301
+  # @option opts [Boolean] :use_http_x_forwarded_proto When set to false will not check for HTTP_X_FORWARDED_PROTO header
+  #
   class SecureOnly
     def initialize(app, opts={})
       opts    = { :secure => true, :status_code => 301, :redirect_to => nil, :use_http_x_forwarded_proto => true }.merge(opts)
