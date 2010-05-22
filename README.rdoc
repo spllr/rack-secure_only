@@ -33,7 +33,7 @@ This can be disabled by setting the :use_http_x_forwarded_proto option to false.
 	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
 	  end
 	
-	  map '/secure_with_fixed_redirect_ulr' do
+	  map '/secure_with_fixed_redirect_url' do
 	    use Rack::SecureOnly, :redirect_to => "https://my.site.org/login"
 	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
 	  end
