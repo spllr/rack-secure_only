@@ -5,8 +5,9 @@ SecureOnly will redirect to https if the request is on http.
 When passed :secure => false it will do the opposite and redirect https to http.
 
 The check if the current request is on https includes checking the HTTP_X_FORWARDED_PROTO header.
-
 This means the redirect will also work on heroku.com
+
+This can be disabled by setting the :use_http_x_forwarded_proto option to false.
 
 == Installation
 
@@ -25,6 +26,16 @@ This means the redirect will also work on heroku.com
 	  map '/notsecure' do
 	    use Rack::SecureOnly, :secure => false
 	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["NON SECURE APP"]] }
+	  end
+	
+	  map '/secure_without_http_x_forwarded_proto_check' do
+	    use Rack::SecureOnly, :use_http_x_forwarded_proto => false
+	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+	  end
+	
+	  map '/secure_with_fixed_redirect_ulr' do
+	    use Rack::SecureOnly, :redirect_to => "https://my.site.org/login"
+	    run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
 	  end
 	end
 	

@@ -15,6 +15,7 @@ module Rack
   # @option opts [Boolean] :secure If set to false will redirect https to http, defaults to true
   # @option opts [Fixnum] :status_code Status code to redirect with, defaults to 301
   # @option opts [Boolean] :use_http_x_forwarded_proto When set to false will not check for HTTP_X_FORWARDED_PROTO header
+  # @option opts [String] :redirect_to When set will use the provided url to redirect to
   #
   class SecureOnly
     def initialize(app, opts={})
