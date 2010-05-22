@@ -13,7 +13,8 @@ begin
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "rack-test", ">= 0.5.3"
     gem.add_dependency "rack", ">= 1.1.0"
-    gem.autorequire = "lib/rack/secure-only"
+    # gem.autorequire = "lib/rack/secure-only"
+    gem.files << File.join(File.dirname(__FILE__), '..', 'lib', 'rack-secure_only')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -36,4 +37,13 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "rack-secure_only #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+  task :yardoc do
+    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
+  end
 end
