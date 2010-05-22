@@ -165,5 +165,16 @@ describe Rack::SecureOnly do
       
       @response.location.should == 'https://www.example.com/login'
     end
+    
+    it "should not check HTTP_X_FORWARDED_PROTO if :use_http_x_forwarded_proto is set to false" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :use_http_x_forwarded_proto => false
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/',  { 'HTTP_X_FORWARDED_PROTO' => 'https' })
+      
+      @response.location.should == "https://www.example.com/"      
+    end
   end
 end

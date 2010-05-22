@@ -13,12 +13,13 @@ module Rack
   #
   class SecureOnly
     def initialize(app, opts={})
-      opts    = { :secure => true, :status_code => 301, :redirect_to => nil }.merge(opts)
+      opts    = { :secure => true, :status_code => 301, :redirect_to => nil, :use_http_x_forwarded_proto => true }.merge(opts)
       @app    = app
       
       @secure               = opts[:secure]
       @redirect_status_code = opts[:status_code]
       @redirect_to          = opts[:redirect_to]
+      @use_http_x_forward  = !!opts[:use_http_x_forwarded_proto]
     end
     
     def call(env)
@@ -31,14 +32,14 @@ module Rack
     # and the HTTP_X_FORWARDED_PROTO header is not set to https
     # 
     def on_http?(env)
-      ( env['rack.url_scheme'] == 'http' && env['HTTP_X_FORWARDED_PROTO'] != 'https')
+      ( env['rack.url_scheme'] == 'http' && ( use_x_forward? ? env['HTTP_X_FORWARDED_PROTO'] != 'https' : true ) )
     end
     
     # Returns true if the current url scheme is https or 
     # the HTTP_X_FORWARDED_PROTO header is set to https
     # 
     def on_https?(env)
-      ( env['rack.url_scheme'] == 'https' || env['HTTP_X_FORWARDED_PROTO'] == 'https')
+      ( env['rack.url_scheme'] == 'https' || ( use_x_forward? ? env['HTTP_X_FORWARDED_PROTO'] == 'https' : false ) )
     end
     
     # Boolean accesor for :secure
@@ -65,6 +66,10 @@ module Rack
       else
         return [false, req.url]
       end
+    end
+    
+    def use_x_forward?
+      @use_http_x_forward
     end
   end
 end
