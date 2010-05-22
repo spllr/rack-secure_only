@@ -5,11 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rack-secure_only}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Klaas Speller"]
-  s.date = %q{2010-05-21}
+  s.autorequire = %q{lib/rack/secure-only}
+  s.date = %q{2010-05-22}
   s.description = %q{Redirect http to https and the other way around}
   s.email = %q{klaasspeller@gmail.com}
   s.extra_rdoc_files = [

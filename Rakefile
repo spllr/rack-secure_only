@@ -13,6 +13,7 @@ begin
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "rack-test", ">= 0.5.3"
     gem.add_dependency "rack", ">= 1.1.0"
+    gem.autorequire = "lib/rack/secure-only"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
