@@ -142,4 +142,17 @@ describe Rack::SecureOnly do
       end
     end
   end
+  
+  describe "configuration" do
+    it "should use :status_code if provided" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :status_code => 307
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      
+      @response.status.should == 307
+    end
+  end
 end

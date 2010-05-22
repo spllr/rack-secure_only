@@ -13,10 +13,10 @@ module Rack
   #
   class SecureOnly
     def initialize(app, opts={})
-      opts    = { :secure => true }.merge(opts)
+      opts    = { :secure => true, :status_code => 301 }.merge(opts)
       @app    = app
       @secure = opts[:secure]
-      @redirect_status_code = 301
+      @redirect_status_code = opts[:status_code]
     end
     
     def call(env)
