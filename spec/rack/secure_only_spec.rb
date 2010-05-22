@@ -51,8 +51,8 @@ describe Rack::SecureOnly do
       before(:each) do
         @response = @request.get('http://www.example.com/secure')
       end
-      it "should respond with status 307 redirect" do
-        @response.status.should == 307
+      it "should respond with status 301 redirect" do
+        @response.status.should == 301
       end
 
       it "should set location to https://www.example.com/secure" do
@@ -87,8 +87,8 @@ describe Rack::SecureOnly do
 
     describe "when requesting https://www.example.com/notsecure" do
       
-      it "should respond with status 307 redirect" do
-        @response.status.should == 307
+      it "should respond with status 301 redirect" do
+        @response.status.should == 301
       end
 
       it "should set location to http://www.example.com/notsecure" do

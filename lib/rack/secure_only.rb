@@ -16,11 +16,12 @@ module Rack
       opts    = { :secure => true }.merge(opts)
       @app    = app
       @secure = opts[:secure]
+      @redirect_status_code = 301
     end
     
     def call(env)
       should_redirect, to_path = redirect?(env)
-      return [307, { 'Content-Type'  => 'text/plain', 'Location' => to_path }, ["Redirect"]] if should_redirect
+      return [@redirect_status_code, { 'Content-Type'  => 'text/plain', 'Location' => to_path }, ["Redirect"]] if should_redirect
       @app.call(env)
     end
     
