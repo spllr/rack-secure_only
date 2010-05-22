@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "lib/rack-secure_only.rb",
      "lib/rack/secure_only.rb",
      "rack-secure_only.gemspec",
      "spec/rack/secure_only_spec.rb",

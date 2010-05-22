@@ -15,7 +15,7 @@ This can be disabled by setting the :use_http_x_forwarded_proto option to false.
 
 == Usage
 
-	require 'rack/secure_only'
+	require 'rack-secure_only'
 
 	app = Rack::Builder.new do      
 	  map '/secure' do
