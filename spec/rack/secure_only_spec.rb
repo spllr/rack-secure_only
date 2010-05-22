@@ -154,5 +154,16 @@ describe Rack::SecureOnly do
       
       @response.status.should == 307
     end
+    
+    it "should use :redirect_to if provided" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :redirect_to => 'https://www.example.com/login'
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      
+      @response.location.should == 'https://www.example.com/login'
+    end
   end
 end

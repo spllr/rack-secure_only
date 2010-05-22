@@ -13,10 +13,12 @@ module Rack
   #
   class SecureOnly
     def initialize(app, opts={})
-      opts    = { :secure => true, :status_code => 301 }.merge(opts)
+      opts    = { :secure => true, :status_code => 301, :redirect_to => nil }.merge(opts)
       @app    = app
-      @secure = opts[:secure]
+      
+      @secure               = opts[:secure]
       @redirect_status_code = opts[:status_code]
+      @redirect_to          = opts[:redirect_to]
     end
     
     def call(env)
@@ -55,10 +57,11 @@ module Rack
     
     def redirect?(env)
       req = Request.new(env)
+      url = @redirect_to || req.url
       if secure? && on_http?(env)
-        return [true, req.url.gsub(/^http:/,'https:')]
+        return [true, url.gsub(/^http:/,'https:')]
       elsif not_secure? && on_https?(env)
-        return [true, req.url.gsub(/^https:/,'http:')]
+        return [true, url.gsub(/^https:/,'http:')]
       else
         return [false, req.url]
       end
