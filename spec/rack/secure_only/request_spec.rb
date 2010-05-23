@@ -51,4 +51,18 @@ describe Rack::Request do
       @req.use_forwarded_proto.should == true
     end
   end
+  
+  context "with request https://example.com/" do
+    before(:each) do
+      @req = Rack::Request.new(Rack::MockRequest.env_for("https://example.com/"))
+    end
+    
+    it "#http? should return true" do
+      @req.should_not be_http
+    end
+    
+    it "#https? should return false" do
+      @req.should be_https
+    end
+  end
 end
