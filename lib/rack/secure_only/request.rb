@@ -1,6 +1,10 @@
 require "rack/request"
 
 module Rack
+  
+  # The secure_only extention add some convenience methods
+  # to determin if the request is a http or a https request
+  #
   class Request 
    
     # Returns true if the current url scheme is http
