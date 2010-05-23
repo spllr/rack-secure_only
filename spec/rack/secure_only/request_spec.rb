@@ -4,7 +4,7 @@ require "rack/secure_only/request"
 require 'rack/mock'
 
 describe Rack::Request do
-  describe "when rack/secure_only/request is included" do
+  describe "when rack/secure_only/request is required" do
     before(:each) do
       @req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com/"))
     end
@@ -27,6 +27,28 @@ describe Rack::Request do
     
     it "should respond to use_forwarded_proto" do
       @req.should respond_to :use_forwarded_proto
+    end
+  end
+  
+  context "with request http://example.com/" do
+    before(:each) do
+      @req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com/"))
+    end
+    
+    it "#http? should return true" do
+      @req.should be_http
+    end
+    
+    it "#https? should return false" do
+      @req.should_not be_https
+    end
+    
+    it "should use forwarded_proto header (HTTP_X_FORWARDED_PROTO)" do
+      @req.should be_use_forwarded_proto
+    end
+    
+    it "should have set use_forwarded_proto to true (HTTP_X_FORWARDED_PROTO)" do
+      @req.use_forwarded_proto.should == true
     end
   end
 end
