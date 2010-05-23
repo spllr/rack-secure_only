@@ -1,4 +1,5 @@
 require "rack"
+require "rack/secure_only/request"
 
 module Rack
   
@@ -65,9 +66,9 @@ module Rack
     def redirect?(env)
       req = Request.new(env)
       url = @redirect_to || req.url
-      if secure? && on_http?(env)
+      if secure? && req.http?(@use_http_x_forward)
         return [true, url.gsub(/^http:/,'https:')]
-      elsif not_secure? && on_https?(env)
+      elsif not_secure? && req.https?(@use_http_x_forward)
         return [true, url.gsub(/^https:/,'http:')]
       else
         return [false, req.url]
