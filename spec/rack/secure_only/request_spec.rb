@@ -67,11 +67,25 @@ describe Rack::Request do
       @req = Rack::Request.new(Rack::MockRequest.env_for("https://example.com/"))
     end
     
-    it "#http? should return true" do
+    it "#http? should return false" do
       @req.should_not be_http
     end
     
-    it "#https? should return false" do
+    it "#https? should return true" do
+      @req.should be_https
+    end
+  end
+  
+  context "with request http://example.com/ and HTTP_X_FORWARDED_PROTO set to https" do
+    before(:each) do
+      @req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com/", { 'HTTP_X_FORWARDED_PROTO' => 'https' }))
+    end
+    
+    it "#http? should return false" do
+      @req.should_not be_http
+    end
+    
+    it "#https? should return true" do
       @req.should be_https
     end
   end
