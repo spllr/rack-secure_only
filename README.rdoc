@@ -43,6 +43,31 @@ This can be disabled by setting the :use_http_x_forwarded_proto option to false.
 	
 This will redirect all requests to /secure to https and all requests to /notsecure to http.
 
+=== Rack::Request
+
+When rack-secure_only is required the Rack::Request will be extended with some convenience methods
+to determine if the current request is http or https
+
+ 	require 'rack-secure_only'
+
+	run lambda { |env| 
+		req = Request.new(env)
+		
+		res_body = ""
+		
+		if req.https?
+			res_body = "You just made a request on https"
+		elsif req.http?
+			res_body = "You just made a request on http"
+		elsif req.https?(false) # do not check the HTTP_X_FORWARDED_PROTO header
+			res_body = "You just made a request on a url with scheme https"	
+		elsif req.http?(false) # do not check the HTTP_X_FORWARDED_PROTO header
+			res_body = "You just made a request on a url with scheme http, I did not check the HTTP_X_FORWARDED_PROTO header"
+		end
+		
+		[200, { 'Content-Type' => 'text/plain' }, res_body]
+	}
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
