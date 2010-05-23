@@ -17,34 +17,8 @@ describe Rack::Request do
       @req.should respond_to :https?      
     end
     
-    it "should respond to use_forwarded_proto?" do
-      @req.should respond_to :use_forwarded_proto?      
-    end
-    
-    it "should respond to use_forwarded_proto=" do
-      @req.should respond_to :use_forwarded_proto=
-    end
-    
-    it "should respond to use_forwarded_proto" do
-      @req.should respond_to :use_forwarded_proto
-    end
-    
     it "should respond to forwarded_proto" do
       @req.should respond_to :forwarded_proto
-    end
-  end
-  
-  describe "use_forwarded_proto defaults" do
-    before(:each) do
-      @req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com/"))
-    end
-    
-    it "should use forwarded_proto header (HTTP_X_FORWARDED_PROTO)" do
-      @req.should be_use_forwarded_proto
-    end
-    
-    it "should have set use_forwarded_proto to true (HTTP_X_FORWARDED_PROTO)" do
-      @req.use_forwarded_proto.should == true
     end
   end
   
@@ -87,6 +61,40 @@ describe Rack::Request do
     
     it "#https? should return true" do
       @req.should be_https
+    end
+    
+    context "and use_forwarded_proto set to false" do      
+      it "#http? should return true" do
+        @req.http?(false).should == true
+      end
+
+      it "#https? should return false" do
+        @req.https?(false).should == false
+      end
+    end
+  end
+  
+  context "with request https://example.com/ and HTTP_X_FORWARDED_PROTO set to https" do
+    before(:each) do
+      @req = Rack::Request.new(Rack::MockRequest.env_for("https://example.com/", { 'HTTP_X_FORWARDED_PROTO' => 'https' }))
+    end
+    
+    it "#http? should return false" do
+      @req.should_not be_http
+    end
+    
+    it "#https? should return true" do
+      @req.should be_https
+    end
+    
+    context "and use_forwarded_proto set to false" do      
+      it "#http? should return false" do
+        @req.http?(false).should == false
+      end
+
+      it "#https? should return true" do
+        @req.https?(false).should == true
+      end
     end
   end
 end
