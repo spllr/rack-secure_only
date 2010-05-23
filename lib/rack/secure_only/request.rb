@@ -1,7 +1,11 @@
 require "rack/request"
 
 module Rack
-  class Request    
+  class Request 
+   
+    # Returns true if the current url scheme is http
+    # and the HTTP_X_FORWARDED_PROTO header is not set to https
+    #
     def http?(use_forwarded_proto=true)
       if use_forwarded_proto
         scheme == 'http' && forwarded_proto != 'https'
@@ -9,7 +13,10 @@ module Rack
         scheme == 'http'
       end
     end
-    
+
+    # Returns true if the current url scheme is https or 
+    # the HTTP_X_FORWARDED_PROTO header is set to https
+    #    
     def https?(use_forwarded_proto=true)
       if use_forwarded_proto
         scheme == 'https' || forwarded_proto == 'https'
