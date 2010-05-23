@@ -24,7 +24,9 @@ module Rack
         scheme == 'https'
       end
     end
-        
+    
+    # @return [String] the value of the HTTP_X_FORWARDED_PROTO header
+    #
     def forwarded_proto
       @env['HTTP_X_FORWARDED_PROTO']
     end

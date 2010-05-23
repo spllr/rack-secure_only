@@ -14,31 +14,33 @@ module Rack
   #
   # @param [Hash] opts options for redirect rules
   # @option opts [Boolean] :secure If set to false will redirect https to http, defaults to true
-  # @option opts [Fixnum] :status_code Status code to redirect with, defaults to 301
+  # @option opts [Fixnum]  :status_code Status code to redirect with, defaults to 301
   # @option opts [Boolean] :use_http_x_forwarded_proto When set to false will not check for HTTP_X_FORWARDED_PROTO header
-  # @option opts [String] :redirect_to When set will use the provided url to redirect to
+  # @option opts [String]  :redirect_to When set will use the provided url to redirect to
   #
   class SecureOnly
     def initialize(app, opts={})
-      opts    = { :secure => true, :status_code => 301, :redirect_to => nil, :use_http_x_forwarded_proto => true }.merge(opts)
       @app    = app
-      
-      @secure               = opts[:secure]
-      @redirect_status_code = opts[:status_code]
-      @redirect_to          = opts[:redirect_to]
-      @use_http_x_forward  = !!opts[:use_http_x_forwarded_proto]
+      @opts    = { 
+                  :secure => true, 
+                  :status_code => 301, 
+                  :redirect_to => nil, 
+                  :use_http_x_forwarded_proto => true 
+                  }.merge(opts)      
     end
     
     def call(env)
       should_redirect, to_path = redirect?(env)
-      return [@redirect_status_code, { 'Content-Type'  => 'text/plain', 'Location' => to_path }, ["Redirect"]] if should_redirect
+      if should_redirect
+        return [@opts[:status_code], { 'Content-Type'  => 'text/plain', 'Location' => to_path }, ["Redirect"]]
+      end
       @app.call(env)
     end
     
     # Boolean accesor for :secure
     #  
     def secure?
-      !!@secure
+      !!@opts[:secure]
     end
 
     # Inversed boolean accesor for :secure
@@ -51,10 +53,10 @@ module Rack
     
     def redirect?(env)
       req = Request.new(env)
-      url = @redirect_to || req.url
-      if secure? && req.http?(@use_http_x_forward)
+      url = @opts[:redirect_to] || req.url
+      if secure? && req.http?(@opts[:use_http_x_forwarded_proto])
         return [true, url.gsub(/^http:/,'https:')]
-      elsif not_secure? && req.https?(@use_http_x_forward)
+      elsif not_secure? && req.https?(@opts[:use_http_x_forwarded_proto])
         return [true, url.gsub(/^https:/,'http:')]
       else
         return [false, req.url]
