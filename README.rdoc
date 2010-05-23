@@ -65,6 +65,8 @@ to determine if the current request is http or https
 			res_body = "You just made a request on a url with scheme http, I did not check the HTTP_X_FORWARDED_PROTO header"
 		end
 		
+		res_body << " and the HTTP_X_FORWARDED_PROTO header was set to" + req.forwarded_proto
+		
 		[200, { 'Content-Type' => 'text/plain' }, res_body]
 	}
 
