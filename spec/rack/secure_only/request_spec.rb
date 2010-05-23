@@ -28,6 +28,24 @@ describe Rack::Request do
     it "should respond to use_forwarded_proto" do
       @req.should respond_to :use_forwarded_proto
     end
+    
+    it "should respond to forwarded_proto" do
+      @req.should respond_to :forwarded_proto
+    end
+  end
+  
+  describe "use_forwarded_proto defaults" do
+    before(:each) do
+      @req = Rack::Request.new(Rack::MockRequest.env_for("http://example.com/"))
+    end
+    
+    it "should use forwarded_proto header (HTTP_X_FORWARDED_PROTO)" do
+      @req.should be_use_forwarded_proto
+    end
+    
+    it "should have set use_forwarded_proto to true (HTTP_X_FORWARDED_PROTO)" do
+      @req.use_forwarded_proto.should == true
+    end
   end
   
   context "with request http://example.com/" do
@@ -41,14 +59,6 @@ describe Rack::Request do
     
     it "#https? should return false" do
       @req.should_not be_https
-    end
-    
-    it "should use forwarded_proto header (HTTP_X_FORWARDED_PROTO)" do
-      @req.should be_use_forwarded_proto
-    end
-    
-    it "should have set use_forwarded_proto to true (HTTP_X_FORWARDED_PROTO)" do
-      @req.use_forwarded_proto.should == true
     end
   end
   

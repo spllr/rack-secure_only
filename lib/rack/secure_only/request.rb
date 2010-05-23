@@ -3,11 +3,11 @@ require "rack/request"
 module Rack
   class Request
     def http?
-      true
+      scheme == 'http'
     end
     
     def https?
-      false
+      scheme == 'https'
     end
     
     def use_forwarded_proto=(flag)
@@ -20,6 +20,10 @@ module Rack
     
     def use_forwarded_proto?
       true      
+    end
+    
+    def forwarded_proto
+
     end
   end
 end
