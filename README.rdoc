@@ -51,23 +51,23 @@ to determine if the current request is http or https
  	require 'rack-secure_only'
 
 	run lambda { |env| 
-		req = Request.new(env)
-		
-		res_body = ""
-		
-		if req.https?
-			res_body = "You just made a request on https"
-		elsif req.http?
-			res_body = "You just made a request on http"
-		elsif req.https?(false) # do not check the HTTP_X_FORWARDED_PROTO header
-			res_body = "You just made a request on a url with scheme https"	
-		elsif req.http?(false) # do not check the HTTP_X_FORWARDED_PROTO header
-			res_body = "You just made a request on a url with scheme http, I did not check the HTTP_X_FORWARDED_PROTO header"
-		end
-		
-		res_body << " and the HTTP_X_FORWARDED_PROTO header was set to" + req.forwarded_proto
-		
-		[200, { 'Content-Type' => 'text/plain' }, res_body]
+	  req = Request.new(env)
+	  
+	  res_body = ""
+	  
+	  if req.https?
+	    res_body = "You just made a request on https"
+	  elsif req.http?
+	    res_body = "You just made a request on http"
+	  elsif req.https?(false) # do not check the HTTP_X_FORWARDED_PROTO header
+	    res_body = "You just made a request on a url with scheme https"  
+	  elsif req.http?(false) # do not check the HTTP_X_FORWARDED_PROTO header
+	    res_body = "You just made a request on a url with scheme http, I did not check the HTTP_X_FORWARDED_PROTO header"
+	  end
+	  
+	  res_body << " and the HTTP_X_FORWARDED_PROTO header was set to" + req.forwarded_proto
+	  
+	  [200, { 'Content-Type' => 'text/plain' }, res_body]
 	}
 
 == Note on Patches/Pull Requests
