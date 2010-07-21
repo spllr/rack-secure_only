@@ -37,7 +37,7 @@ describe Rack::SecureOnly do
 
       describe "with HTTP_X_FORWARDED_PROTO header set to https (like with heroku ssl)" do
         before(:each) do
-          @response = @request.get('https://www.example.com/secure', { 'HTTP_X_FORWARDED_PROTO' => 'https' })
+          @response = @request.get('http://www.example.com/secure', { 'HTTP_X_FORWARDED_PROTO' => 'https' })
         end
 
         it "should do no redirect" do
