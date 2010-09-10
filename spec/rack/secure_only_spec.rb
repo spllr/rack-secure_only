@@ -257,4 +257,38 @@ describe Rack::SecureOnly do
         @response.location.should_not be_nil
     end
   end
+  
+  describe "README examples" do
+    
+    
+    it "works for /secure_with_an_if_condition_block" do
+        app = Rack::Builder.new do
+          map '/secure_with_an_if_condition' do
+            use Rack::SecureOnly, :if => ENV['RACK_ENV'] == 'production'
+            run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+          end
+        end
+
+        @request  = Rack::MockRequest.new(app)
+        @response = @request.get('http://www.example.com/secure_with_an_if_condition')
+        @response.location.should be_nil
+    end
+        
+    it "works for /secure_with_an_if_condition_block" do
+        app = Rack::Builder.new do
+          map '/secure_with_an_if_condition_block' do
+            use Rack::SecureOnly, :if => Proc.new { |request| request.params.key?('secure_thing') }
+            run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["APP"]] }
+          end
+        end
+
+        @request  = Rack::MockRequest.new(app)
+        @response = @request.get('http://www.example.com/secure_with_an_if_condition_block')
+        @response.location.should be_nil
+
+        @request  = Rack::MockRequest.new(app)
+        @response = @request.get('http://www.example.com/secure_with_an_if_condition_block?secure_thing=true')
+        @response.location.should_not be_nil
+    end
+  end
 end
