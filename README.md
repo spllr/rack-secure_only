@@ -9,8 +9,6 @@ This means the redirect will also work on heroku.com
 
 This can be disabled by setting the :use_http_x_forwarded_proto option to false.
 
-It is currently only tested on ruby 1.9
-
 ## Installation
 
     sudo gem install rack-secure_only
