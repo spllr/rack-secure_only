@@ -12,6 +12,7 @@ begin
     gem.authors = ["Klaas Speller"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "rack-test", ">= 0.5.3"
+    gem.add_development_dependency "mocha", ">= 0.9.8"
     gem.add_dependency "rack", ">= 1.1.0"
   end
   Jeweler::GemcutterTasks.new

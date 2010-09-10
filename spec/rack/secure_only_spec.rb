@@ -187,5 +187,59 @@ describe Rack::SecureOnly do
       
       @response.location.should == "https://www.example.com/"      
     end
+    
+    it "should not redirect when :if is false" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :if => false
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      
+      @response.location.should be_nil
+      @response.status.should == 200
+    end
+    
+    it "should redirect when :if is true" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :if => true
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      
+      @response.location.should_not be_nil
+      @response.status.should == 301
+    end
+    
+    it "should evaluate a block if it is passed to :if" do
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :if => Proc.new { |request| false }
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      
+      @response.location.should be_nil
+      @response.status.should == 200
+    end
+    
+    it "should pass a request object to an :if block" do
+      handled = false
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :if => Proc.new { |request| 
+          handled = true
+          request.class.should == Rack::Request
+          true
+        }
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
+
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')      
+      
+      # sanity
+      handled.should == true
+    end
   end
 end

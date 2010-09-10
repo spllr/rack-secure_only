@@ -49,11 +49,25 @@ module Rack
       !secure?
     end
     
+    def handle?(req)
+      if @opts.key?(:if)
+        cond = @opts[:if]
+        cond = cond.call(req) if cond.respond_to?(:call)
+        return cond
+      end
+      true
+    end
+    
     protected
     
     def redirect?(env)
       req = Request.new(env)
       url = @opts[:redirect_to] || req.url
+      
+      # Determine if the middleware should handle this request
+      return [false, req.url] unless handle?(req)
+      
+      # Determine http(s) behavior
       if secure? && req.http?(@opts[:use_http_x_forwarded_proto])
         return [true, url.gsub(/^http:/,'https:')]
       elsif not_secure? && req.https?(@opts[:use_http_x_forwarded_proto])
