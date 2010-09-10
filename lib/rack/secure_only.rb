@@ -49,6 +49,9 @@ module Rack
       !secure?
     end
     
+    # Returns false if the current request should
+    # not be handled by the middleware
+    # 
     def handle?(req)
       if @opts.key?(:if)
         cond = @opts[:if]

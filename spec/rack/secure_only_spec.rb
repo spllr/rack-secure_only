@@ -243,18 +243,18 @@ describe Rack::SecureOnly do
     end
     
     it "should evaluate an :if block on a per request bases" do
-        app = Rack::Builder.new do      
-          use Rack::SecureOnly, :if => lambda { |request| request.params.key?('do_it') }
-          run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
-        end
+      app = Rack::Builder.new do      
+        use Rack::SecureOnly, :if => lambda { |request| request.params.key?('do_it') }
+        run lambda { |env| [200, { 'Content-Type' => 'text/plain' }, ["SECURE APP"]] }
+      end
 
-        @request  = Rack::MockRequest.new(app)
-        @response = @request.get('http://www.example.com/')
-        @response.location.should be_nil
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/')
+      @response.location.should be_nil
 
-        @request  = Rack::MockRequest.new(app)
-        @response = @request.get('http://www.example.com/?do_it=true')
-        @response.location.should_not be_nil
+      @request  = Rack::MockRequest.new(app)
+      @response = @request.get('http://www.example.com/?do_it=true')
+      @response.location.should_not be_nil
     end
   end
   
