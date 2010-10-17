@@ -33,10 +33,16 @@ module Rack
       end
       
       def redirect?
-        if http? && secure?
-          true
-        elsif https? && secure?
-          false
+        https? != secure?
+      end
+      
+      def location
+        if redirect? && secure?
+          @redirect_to || @request.url.gsub(/^http:/, 'https:')
+        elsif redirect? && !secure?
+          @redirect_to || @request.url.gsub(/^https:/, 'http:')
+        else
+          @request.url
         end
       end
     end
