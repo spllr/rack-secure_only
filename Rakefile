@@ -10,7 +10,7 @@ begin
     gem.email = "klaasspeller@gmail.com"
     gem.homepage = "http://github.com/spllr/rack-secure_only"
     gem.authors = ["Klaas Speller"]
-    gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.add_development_dependency "rspec", ">= 2.0.0"
     gem.add_development_dependency "rack-test", ">= 0.5.3"
     gem.add_development_dependency "mocha", ">= 0.9.8"
     gem.add_dependency "rack", ">= 1.1.0"
@@ -20,10 +20,13 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_files = FileList['spec/**/*_spec.rb']
+require "rspec/core/rake_task"
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  # t.rspec_path = 'bin/rspec'
+  #   t.rspec_opts = %w[--color]
+  # spec.libs << 'lib' << 'spec'
+  # spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.rspec_opts = %w[--color -f s]
 end
 
 task :default => :spec
