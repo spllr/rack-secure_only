@@ -22,10 +22,6 @@ end
 
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |spec|
-  # t.rspec_path = 'bin/rspec'
-  #   t.rspec_opts = %w[--color]
-  # spec.libs << 'lib' << 'spec'
-  # spec.spec_files = FileList['spec/**/*_spec.rb']
   spec.rspec_opts = %w[--color -f s]
 end
 

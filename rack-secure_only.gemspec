@@ -19,19 +19,20 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
      ".gitignore",
+     ".rspec",
      "Gemfile",
      "Gemfile.lock",
      "LICENSE",
      "README.md",
      "Rakefile",
      "VERSION",
+     "autotest/discover.rb",
      "lib/rack-secure_only.rb",
      "lib/rack/secure_only.rb",
      "lib/rack/secure_only/request.rb",
      "rack-secure_only.gemspec",
      "spec/rack/secure_only/request_spec.rb",
      "spec/rack/secure_only_spec.rb",
-     "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/spllr/rack-secure_only}
@@ -40,7 +41,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Redirect http to https and the other way around}
   s.test_files = [
-    "spec/rack/secure_only/logic_spec.rb",
+    "spec/rack/secure_only/handler_spec.rb",
      "spec/rack/secure_only/request_spec.rb",
      "spec/rack/secure_only_spec.rb",
      "spec/spec_helper.rb"
