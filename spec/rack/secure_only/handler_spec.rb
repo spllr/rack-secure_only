@@ -131,16 +131,18 @@ describe Rack::SecureOnly::Handler do
       end
     end
     
-    context "when redirecting with :redirect_to set" do
+    context "when :redirect_to is set" do
       let(:options) { { :redirect_to => 'https://www.example.com/login' } }
       context "and redirecting" do
         before { Rack::SecureOnly::Handler.any_instance.stubs(:redirect?).returns(true) }
+        before { make_env(:get, 'http://www.example.com/') }
         its(:location) { should == options[:redirect_to] }
       end
       
       context "and not redirecting" do
-        before { Rack::SecureOnly::Handler.any_instance.stubs(:redirect?).returns(true) }
-        its(:location) { should != options[:redirect_to] }
+        before { Rack::SecureOnly::Handler.any_instance.stubs(:redirect?).returns(false) }
+        before { make_env(:get, 'https://www.example.com/') }
+        its(:location) { should_not == options[:redirect_to] }
       end
     end
   end
