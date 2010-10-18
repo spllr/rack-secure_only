@@ -12,6 +12,15 @@ shared_examples_for "secure env" do
   its(:http?) { should == false }
 end
 
+shared_examples_for "redirecting" do
+  its(:redirect?) { should == true }
+  its(:location) { should_not be_nil }
+end
+
+shared_examples_for "not redirecting" do
+  its(:redirect?) { should == false }
+end
+
 describe Rack::SecureOnly::Handler do
   def make_env(verb='GET', uri='/', opts={})
     opts[:method] = verb
@@ -65,28 +74,28 @@ describe Rack::SecureOnly::Handler do
       context "and scheme is http" do
         before { make_env(:get, 'http://www.example.com/') }
         it_should_behave_like "insecure env"
-        its(:redirect?) { should == true }
+        it_should_behave_like "redirecting"
         its(:location) { should == 'https://www.example.com/' }
       end
 
       context "and scheme is https" do
         before { make_env(:get, 'https://www.example.com/') }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == false }
+        it_should_behave_like "not redirecting"
         its(:location) { should == 'https://www.example.com/' }
       end
 
-      context "and scheme is https and X-FORWARDED-PROTO is set to https" do
+      context "and scheme is https and X-Forwarded-Proto is set to https" do
         before { make_env(:get, 'https://www.example.com/', { 'HTTP_X_FORWARDED_PROTO' => 'https' }) }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == false }
+        it_should_behave_like "not redirecting"
         its(:location) { should == 'https://www.example.com/' }
       end
 
       context "and scheme is http and X-Forwarded-Proto is set to https" do
         before { make_env(:get, 'https://www.example.com/', { 'HTTP_X_FORWARDED_PROTO' => 'https' }) }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == false }
+        it_should_behave_like "not redirecting"
         its(:location) { should == 'https://www.example.com/' }
       end
     end
@@ -96,28 +105,28 @@ describe Rack::SecureOnly::Handler do
       context "and scheme is http" do
         before { make_env(:get, 'http://www.example.com/') }
         it_should_behave_like "insecure env"
-        its(:redirect?) { should == false }
+        it_should_behave_like "not redirecting"
         its(:location) { should == 'http://www.example.com/' }
       end
 
       context "and scheme is https" do
         before { make_env(:get, 'https://www.example.com/') }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == true }
+        it_should_behave_like "redirecting"
         its(:location) { should == 'http://www.example.com/' }
       end
 
-      context "and scheme is https and X-FORWARDED-PROTO is set to https" do
+      context "and scheme is https and X-Forwarded-Proto is set to https" do
         before { make_env(:get, 'https://www.example.com/', { 'HTTP_X_FORWARDED_PROTO' => 'https' }) }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == true }
+        it_should_behave_like "redirecting"
         its(:location) { should == 'http://www.example.com/' }
       end
 
       context "and scheme is http and X-Forwarded-Proto is set to https" do
         before { make_env(:get, 'https://www.example.com/', { 'HTTP_X_FORWARDED_PROTO' => 'https' }) }
         it_should_behave_like "secure env"
-        its(:redirect?) { should == true }
+        it_should_behave_like "redirecting"
         its(:location) { should == 'http://www.example.com/' }
       end
     end
