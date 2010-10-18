@@ -18,7 +18,7 @@ module Rack
       
       def https?
         if @use_http_x_forwarded_proto
-          @request.scheme == 'https' || @request['HTTP_X_FORWARDED_PROTO'] == 'https'
+          @request.scheme == 'https' || @request.env['HTTP_X_FORWARDED_PROTO'] == 'https'
         else
           @request.scheme == 'https'
         end
@@ -26,7 +26,7 @@ module Rack
       
       def http?
         if @use_http_x_forwarded_proto
-          @request.scheme == 'http' && @request['HTTP_X_FORWARDED_PROTO'] != 'https'
+          @request.scheme == 'http' && @request.env['HTTP_X_FORWARDED_PROTO'] != 'https'
         else
           @request.scheme == 'http'
         end

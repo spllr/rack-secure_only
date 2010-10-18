@@ -1,5 +1,6 @@
 require "rack"
 require "rack/secure_only/request"
+require "rack/secure_only/handler"
 
 module Rack
   
@@ -30,23 +31,11 @@ module Rack
     end
     
     def call(env)
-      should_redirect, to_path = redirect?(env)
-      if should_redirect
-        return [@opts[:status_code], { 'Content-Type'  => 'text/plain', 'Location' => to_path }, ["Redirect"]]
-      end
+      handler = Rack::SecureOnly::Handler.new(env, @opts)
+      if handler.redirect? && handle?(Rack::Request.new(env))
+        return [handler.status_code, { 'Content-Type'  => 'text/plain', 'Location' => handler.location }, ["Redirect"]]
+      end      
       @app.call(env)
-    end
-    
-    # Boolean accesor for :secure
-    #  
-    def secure?
-      !!@opts[:secure]
-    end
-
-    # Inversed boolean accesor for :secure
-    #      
-    def not_secure?
-      !secure?
     end
     
     # Returns false if the current request should
@@ -59,25 +48,6 @@ module Rack
         return cond
       end
       true
-    end
-    
-    protected
-    
-    def redirect?(env)
-      req = Request.new(env)
-      url = @opts[:redirect_to] || req.url
-      
-      # Determine if the middleware should handle this request
-      return [false, req.url] unless handle?(req)
-      
-      # Determine http(s) behavior
-      if secure? && req.http?(@opts[:use_http_x_forwarded_proto])
-        return [true, url.gsub(/^http:/,'https:')]
-      elsif not_secure? && req.https?(@opts[:use_http_x_forwarded_proto])
-        return [true, url.gsub(/^https:/,'http:')]
-      else
-        return [false, req.url]
-      end
     end
   end
 end

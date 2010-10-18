@@ -174,7 +174,7 @@ describe Rack::SecureOnly do
       @request  = Rack::MockRequest.new(app)
       @response = @request.get('https://www.example.com/')
       
-      @response.location.should == 'http://www.example.com/login'
+      @response.location.should == 'https://www.example.com/login'
     end
     
     it "should not check HTTP_X_FORWARDED_PROTO if :use_http_x_forwarded_proto is set to false" do
