@@ -48,3 +48,26 @@ module Rack
     end
   end
 end
+
+__END__
+
+module Sinatra
+  module SecureOnly
+    def self.registered(app)
+    
+      # Usage
+      # 
+      # get "/https/only/route", :secure => true do
+      #   "http will be redirected to https"
+      # end
+      #
+      app.set :secure do |*args|
+        condition {
+          handler = ::Rack::SecureOnly::Handler.new env, :secure => (args.shift || true)
+          redirect handler.location if handler.redirect?
+          true
+        }
+      end
+    end
+  end
+end
