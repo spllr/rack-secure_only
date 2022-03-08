@@ -9,7 +9,7 @@ GEM
   specs:
     mocha (0.9.8)
       rake
-    rack (1.2.1)
+    rack (2.2.3)
     rack-test (0.5.4)
       rack (>= 1.0)
     rake (0.8.7)
@@ -21,7 +21,6 @@ PLATFORMS
 
 DEPENDENCIES
   mocha (>= 0.9.8)
-  rack (>= 1.1.0)
   rack-secure_only!
   rack-test (>= 0.5.3)
   rspec (>= 1.2.9)
